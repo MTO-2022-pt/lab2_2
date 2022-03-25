@@ -11,14 +11,16 @@ import org.junit.jupiter.api.Test;
 class SimilarityFinderTest {
 
     SimilarityFinder finderTrue;
+    SimilarityFinder finderFalse;
 
     @BeforeEach
     public void createFinders() {
         finderTrue = new SimilarityFinder(((elem, sequence) -> SearchResult.builder().withFound(true).build()));
+        finderFalse = new SimilarityFinder(((elem, sequence) -> SearchResult.builder().withFound(false).build()));
     }
 
     @Test
-    public void areSequenceLengthsZero() {
+    public void shouldReturnOneWhenSequencesLengthsAreZero() {
         int[] seq1 = {};
         int[] seq2 = {};
 
@@ -40,5 +42,14 @@ class SimilarityFinderTest {
 
         double result = finderTrue.calculateJackardSimilarity(seq1, seq2);
         assertEquals(1.0d, result);
+    }
+
+    @Test
+    public void shouldReturnZeroWhenSequencesHaveEqualLengthAndHaveDifferentElements() {
+        int[] seq1 = {1, 2, 3};
+        int[] seq2 = {4, 5, 6};
+
+        double result = finderFalse.calculateJackardSimilarity(seq1, seq2);
+        assertEquals(0, result);
     }
 }
