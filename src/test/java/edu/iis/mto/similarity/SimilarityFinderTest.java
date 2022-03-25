@@ -1,27 +1,31 @@
 package edu.iis.mto.similarity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.iis.mto.searcher.SearchResult;
 import edu.iis.mto.searcher.SequenceSearcher;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class SimilarityFinderTest {
 
-    SequenceSearcher searcherStub;
+    int counter;
 
-    @BeforeEach
-    void beforeEach(){
-        searcherStub = (elem, sequence) -> {
-            for(int i = 0; i < sequence.length; i++){
-                if(sequence[i] == elem)
-                    return SearchResult.builder().withFound(true).withPosition(i).build();
-            }
-            return SearchResult.builder().withFound(false).build();
-        };
-    }
+    SequenceSearcher searcherStub = (elem, sequence) -> {
+        for(int i = 0; i < sequence.length; i++){
+            if(sequence[i] == elem)
+                return SearchResult.builder().withFound(true).withPosition(i).build();
+        }
+        return SearchResult.builder().withFound(false).build();
+    };
+
+    SequenceSearcher searcherDummyWithCounter = (elem, sequence) -> {
+        counter++;
+        for(int i = 0; i < sequence.length; i++){
+            if(sequence[i] == elem)
+                return SearchResult.builder().withFound(true).withPosition(i).build();
+        }
+        return SearchResult.builder().withFound(false).build();
+    };
 
     //testy stanu
     @Test
@@ -110,6 +114,47 @@ class SimilarityFinderTest {
         SimilarityFinder similarityFinder = new SimilarityFinder(searcherStub);
         double similarity = similarityFinder.calculateJackardSimilarity(arr1, arr2);
         assertEquals(similarity, 0.6666666666666666);
+    }
+
+    //testy zachowania
+    @Test
+    void fourInFiveSequenceSearchTwiceSimilarityTest(){
+        int[] arr1 = {1, 2, 3, 4, 5}; int[] arr2 = {1, 2, 3, 4, 6};
+        SimilarityFinder similarityFinder = new SimilarityFinder(searcherStub);
+        double similarity1 = similarityFinder.calculateJackardSimilarity(arr1, arr2);
+        double similarity2 = similarityFinder.calculateJackardSimilarity(arr1, arr2);
+        assertEquals(similarity1, 0.6666666666666666);
+        assertEquals(similarity1, similarity2);
+    }
+
+    @Test
+    void threeSequencesSimilarityTest(){
+        int[] arr1 = {1, 2, 3, 4, 5}; int[] arr2 = {1, 2, 7, 8, 9}; int[] arr3 = {7, 8, 1, 2 ,3};
+        SimilarityFinder similarityFinder = new SimilarityFinder(searcherStub);
+        double similarity1 = similarityFinder.calculateJackardSimilarity(arr1, arr2);
+        double similarity2 = similarityFinder.calculateJackardSimilarity(arr1, arr3);
+        double similarity3 = similarityFinder.calculateJackardSimilarity(arr2, arr3);
+        assertEquals(similarity1, 0.25);
+        assertEquals(similarity2, 0.42857142857142855);
+        assertEquals(similarity3, 0.6666666666666666);
+    }
+
+    @Test
+    void searchMethodRunsCounterTest(){
+        counter = 0;
+        int[] arr1 = {1, 2, 3}; int[] arr2 = {4, 5, 6};
+        SimilarityFinder similarityFinder = new SimilarityFinder(searcherDummyWithCounter);
+        similarityFinder.calculateJackardSimilarity(arr1, arr2);
+        assertEquals(counter, arr1.length);
+    }
+
+    @Test
+    void searchMethod2RunsCounterTest(){
+        counter = 0;
+        int[] arr1 = {1, 2, 3, 4, 5}; int[] arr2 = {1, 2, 3, 4, 5, 6, 7};
+        SimilarityFinder similarityFinder = new SimilarityFinder(searcherDummyWithCounter);
+        similarityFinder.calculateJackardSimilarity(arr1, arr2);
+        assertEquals(counter, arr1.length);
     }
 
 }
