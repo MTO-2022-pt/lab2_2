@@ -3,17 +3,22 @@ package edu.iis.mto.similarity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.iis.mto.searcher.SearchResult;
+import edu.iis.mto.searcher.SequenceSearcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class SimilarityFinderTest {
     SimilarityFinder finderTrue;
     SimilarityFinder finderFalse;
+    SearchResult found;
+    SearchResult notFound;
 
     @BeforeEach
-    public void createFinders() {
+    public void setUp() {
         finderTrue = new SimilarityFinder(((elem, sequence) -> SearchResult.builder().withFound(true).build()));
         finderFalse = new SimilarityFinder(((elem, sequence) -> SearchResult.builder().withFound(false).build()));
+        found = SearchResult.builder().withFound(true).build();
+        notFound = SearchResult.builder().withFound(false).build();
     }
 
     @Test
@@ -68,8 +73,6 @@ class SimilarityFinderTest {
     public void totalLengthTenTwoSameElements() {
         int[] seq1 = {5, 6, 7, 8};
         int[] seq2 = {1, 2, 3, 4, 5, 6};
-        SearchResult found = SearchResult.builder().withFound(true).build();
-        SearchResult notFound = SearchResult.builder().withFound(false).build();
 
         SimilarityFinder finder = new SimilarityFinder((elem, sequence) -> {
             switch (elem) {
@@ -87,11 +90,26 @@ class SimilarityFinderTest {
     public void totalLengthNineThreeSameElements() {
         int[] seq1 = {3, 4, 5};
         int[] seq2 = {1, 2, 3, 4, 5, 6};
-        SearchResult found = SearchResult.builder().withFound(true).build();
 
         SimilarityFinder finder = new SimilarityFinder((elem, sequence) -> elem == 3 || elem == 4 || elem == 5 ? found : null);
 
         double result = finder.calculateJackardSimilarity(seq1, seq2);
         assertEquals(0.5d, result);
+    }
+
+    @Test
+    public void invokeFourTimes() {
+        int[] seq1 = {3, 4, 5, 6};
+        int[] seq2 = {3, 4, 5, 6};
+        final int[] invokeCounter = {0};
+
+        SequenceSearcher searcherMock = (elem, sequence) -> {
+            invokeCounter[0]++;
+            return found;
+        };
+
+        SimilarityFinder finder = new SimilarityFinder(searcherMock);
+        finder.calculateJackardSimilarity(seq1, seq2);
+        assertEquals(4, invokeCounter[0]);
     }
 }
