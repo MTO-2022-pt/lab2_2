@@ -64,4 +64,10 @@ class SimilarityFinderTest {
         assertEquals(1, simFinder.calculateJackardSimilarity(fourElementSeq, fourElementSeq));
     }
 
+    /*
+    ### Testy zachowania ###
+     */
+
+
+
 }
