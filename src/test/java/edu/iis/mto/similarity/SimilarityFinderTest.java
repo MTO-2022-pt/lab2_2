@@ -149,7 +149,7 @@ class SimilarityFinderTest {
     }
 
     @Test
-    void searchMethod2RunsCounterTest(){
+    void searchMethodRunsCounterSecondArrayLongerTest(){
         counter = 0;
         int[] arr1 = {1, 2, 3, 4, 5}; int[] arr2 = {1, 2, 3, 4, 5, 6, 7};
         SimilarityFinder similarityFinder = new SimilarityFinder(searcherDummyWithCounter);
