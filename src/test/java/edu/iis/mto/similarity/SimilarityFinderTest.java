@@ -112,4 +112,20 @@ class SimilarityFinderTest {
         finder.calculateJackardSimilarity(seq1, seq2);
         assertEquals(4, invokeCounter[0]);
     }
+
+    @Test
+    public void searchMethodNotInvoked() {
+        int[] seq1 = {};
+        int[] seq2 = {};
+        final int[] invokeCounter = {0};
+
+        SequenceSearcher searcherMock = (elem, sequence) -> {
+            invokeCounter[0]++;
+            return null;
+        };
+
+        SimilarityFinder finder = new SimilarityFinder(searcherMock);
+        finder.calculateJackardSimilarity(seq1, seq2);
+        assertEquals(0, invokeCounter[0]);
+    }
 }
