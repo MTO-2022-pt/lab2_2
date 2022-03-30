@@ -52,4 +52,22 @@ class SimilarityFinderTest {
         double result = finderFalse.calculateJackardSimilarity(seq1, seq2);
         assertEquals(0, result);
     }
+
+    @Test
+    public void shouldReturnZeroWhenFirstSequenceIsEmpty() {
+        int[] seq1 = {};
+        int[] seq2 = {1, 2, 3};
+
+        double result = finderFalse.calculateJackardSimilarity(seq1, seq2);
+        assertEquals(0, result);
+    }
+
+    @Test
+    public void shouldReturnZeroWhenSecondSequenceIsEmpty() {
+        int[] seq1 = {3, 6};
+        int[] seq2 = {};
+
+        double result = finderFalse.calculateJackardSimilarity(seq1, seq2);
+        assertEquals(0, result);
+    }
 }
