@@ -111,35 +111,48 @@ class SimilarityFinderTest {
         int[] seq2 = {3, 4, 5, 6};
         final int[] invokeCounter = {0};
 
-        SequenceSearcher searcherMock = new SequenceSearcher() {
-            @Override
-            public SearchResult search(int elem, int[] sequence) {
-                invokeCounter[0]++;
-                return found;
-            }
+        SequenceSearcher searcherMock = (elem, sequence) -> {
+            invokeCounter[0]++;
+            return found;
         };
 
         SimilarityFinder finder = new SimilarityFinder(searcherMock);
         finder.calculateJackardSimilarity(seq1, seq2);
         assertEquals(4, invokeCounter[0]);
     }
-    
+
     @Test
     public void shouldNotInvokeSearchMethod() {
         int[] seq1 = {};
         int[] seq2 = {};
         final int[] invokeCounter = {0};
 
-        SequenceSearcher searcherMock = new SequenceSearcher() {
-            @Override
-            public SearchResult search(int elem, int[] sequence) {
-                invokeCounter[0]++;
-                return found;
-            }
+        SequenceSearcher searcherMock = (elem, sequence) -> {
+            invokeCounter[0]++;
+            return found;
         };
 
         SimilarityFinder finder = new SimilarityFinder(searcherMock);
         finder.calculateJackardSimilarity(seq1, seq2);
         assertEquals(0, invokeCounter[0]);
+    }
+
+    @Test
+    public void shouldFindTwoElementsFromFirstSequenceInSecondSequence() {
+        int[] seq1 = {1, 2};
+        int[] seq2 = {1, 2, 3, 4, 5};
+        final int[] invokeCounter = {0};
+
+        SequenceSearcher searcherMock = (elem, sequence) -> {
+            if (elem == 1 || elem == 2) {
+                invokeCounter[0]++;
+                return found;
+            }
+            return notFound;
+        };
+
+        SimilarityFinder finder = new SimilarityFinder(searcherMock);
+        finder.calculateJackardSimilarity(seq1, seq2);
+        assertEquals(2, invokeCounter[0]);
     }
 }
