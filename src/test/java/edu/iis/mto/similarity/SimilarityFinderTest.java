@@ -11,6 +11,7 @@ class SimilarityFinderTest {
     public static final int[] fiveElementSeq = {1, 2, 3, 4, 7};
     public static final int[] anotherFiveElementSeqTwoSimilar = {1, 3, 5, 6, 8};
     public static final int[] fourElementSeq = {10, 2, 3, 1};
+    public static final int[] fourElementSeqDuplicates = {1, 2, 2, 3};
 
     /*
     ### Testy stanu ###
@@ -64,9 +65,22 @@ class SimilarityFinderTest {
         assertEquals(1, simFinder.calculateJackardSimilarity(fourElementSeq, fourElementSeq));
     }
 
+    @Test //Bug?
+    void sameLenSeqFirstWithDuplicatesExpectingSeqASimSeqBEqualsSeqBSimA() {
+        SimilarityFinder simFinder = new SimilarityFinder(((elem, sequence) -> {
+            if (elem == 1 ||elem == 2 || elem == 3) return SearchResult.builder().withFound(true).build();
+            return SearchResult.builder().withFound(false).build();
+        }));
+        assertEquals(
+                simFinder.calculateJackardSimilarity(fourElementSeqDuplicates,fourElementSeq),
+                simFinder.calculateJackardSimilarity(fourElementSeq, fourElementSeqDuplicates)
+        );
+    }
+
     /*
     ### Testy zachowania ###
      */
+
 
 
 
