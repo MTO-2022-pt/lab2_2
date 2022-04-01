@@ -81,7 +81,29 @@ class SimilarityFinderTest {
     ### Testy zachowania ###
      */
 
+    @Test
+    void sameLenSeqExpectingInvokingFourTimes() {
+        final int[] counter = {0};
+        SimilarityFinder simFinder = new SimilarityFinder(((elem, sequence) -> {
+            counter[0]++;
+            if (elem == 1 ||elem == 2 || elem == 3) return SearchResult.builder().withFound(true).build();
+            return SearchResult.builder().withFound(false).build();
+        }));
+        simFinder.calculateJackardSimilarity(fourElementSeqDuplicates,fourElementSeq);
+        assertEquals(fourElementSeqDuplicates.length,counter[0]);
+    }
 
+    @Test
+    void diffLenSeqExpectingInvokingFourTimes() {
+        final int[] counter = {0};
+        SimilarityFinder simFinder = new SimilarityFinder(((elem, sequence) -> {
+            counter[0]++;
+            if (elem == 1 ||elem == 2 || elem == 3) return SearchResult.builder().withFound(true).build();
+            return SearchResult.builder().withFound(false).build();
+        }));
+        simFinder.calculateJackardSimilarity(fourElementSeqDuplicates,fiveElementSeq);
+        assertEquals(fourElementSeqDuplicates.length,counter[0]);
+    }
 
 
 }
