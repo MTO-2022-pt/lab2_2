@@ -1,7 +1,6 @@
 package edu.iis.mto.similarity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import edu.iis.mto.searcher.SearchResult;
 import org.junit.jupiter.api.Test;
@@ -74,19 +73,13 @@ class SimilarityFinderTest {
             if (elem == 1 || elem == 2 || elem == 3) return SearchResult.builder().withFound(true).build();
             return SearchResult.builder().withFound(false).build();
         }));
-        assertEquals(
-                simFinder.calculateJackardSimilarity(fourElementSeqDuplicates, fourElementSeq),
-                simFinder.calculateJackardSimilarity(fourElementSeq, fourElementSeqDuplicates)
-        );
+        assertEquals(simFinder.calculateJackardSimilarity(fourElementSeqDuplicates, fourElementSeq), simFinder.calculateJackardSimilarity(fourElementSeq, fourElementSeqDuplicates));
     }
 
     @Test
     void diffSeqExpectingZero() {
         SimilarityFinder simFinder = new SimilarityFinder(((elem, sequence) -> SearchResult.builder().withFound(false).build()));
-        assertEquals(
-                0,
-                simFinder.calculateJackardSimilarity(differentSeq[0], differentSeq[1])
-        );
+        assertEquals(0, simFinder.calculateJackardSimilarity(differentSeq[0], differentSeq[1]));
     }
 
     /*
@@ -127,6 +120,5 @@ class SimilarityFinderTest {
         simFinder.calculateJackardSimilarity(emptySeq, fiveElementSeq);
         assertEquals(emptySeq.length, counter[0]);
     }
-
 
 }
