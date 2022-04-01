@@ -12,6 +12,7 @@ class SimilarityFinderTest {
     public static final int[] anotherFiveElementSeqTwoSimilar = {1, 3, 5, 6, 8};
     public static final int[] fourElementSeq = {10, 2, 3, 1};
     public static final int[] fourElementSeqDuplicates = {1, 2, 2, 3};
+    public static final int[][] differentSeq = {{1, 2, 3, 4}, {5, 6, 7, 8}};
 
     /*
     ### Testy stanu ###
@@ -58,22 +59,33 @@ class SimilarityFinderTest {
     @Test
     void sameSeqExpectingOne() {
         SimilarityFinder simFinder = new SimilarityFinder(((elem, sequence) -> {
-            if (elem == 1 ||elem == 2 || elem == 3 || elem == 10) return SearchResult.builder().withFound(true).build();
+            if (elem == 1 || elem == 2 || elem == 3 || elem == 10)
+                return SearchResult.builder().withFound(true).build();
             return SearchResult.builder().withFound(false).build();
         }));
         //4 similar
         assertEquals(1, simFinder.calculateJackardSimilarity(fourElementSeq, fourElementSeq));
     }
 
-    @Test //Bug?
+    @Test
+        //Bug?
     void sameLenSeqFirstWithDuplicatesExpectingSeqASimSeqBEqualsSeqBSimA() {
         SimilarityFinder simFinder = new SimilarityFinder(((elem, sequence) -> {
-            if (elem == 1 ||elem == 2 || elem == 3) return SearchResult.builder().withFound(true).build();
+            if (elem == 1 || elem == 2 || elem == 3) return SearchResult.builder().withFound(true).build();
             return SearchResult.builder().withFound(false).build();
         }));
         assertEquals(
-                simFinder.calculateJackardSimilarity(fourElementSeqDuplicates,fourElementSeq),
+                simFinder.calculateJackardSimilarity(fourElementSeqDuplicates, fourElementSeq),
                 simFinder.calculateJackardSimilarity(fourElementSeq, fourElementSeqDuplicates)
+        );
+    }
+
+    @Test
+    void diffSeqExpectingZero() {
+        SimilarityFinder simFinder = new SimilarityFinder(((elem, sequence) -> SearchResult.builder().withFound(false).build()));
+        assertEquals(
+                0,
+                simFinder.calculateJackardSimilarity(differentSeq[0], differentSeq[1])
         );
     }
 
@@ -86,11 +98,11 @@ class SimilarityFinderTest {
         final int[] counter = {0};
         SimilarityFinder simFinder = new SimilarityFinder(((elem, sequence) -> {
             counter[0]++;
-            if (elem == 1 ||elem == 2 || elem == 3) return SearchResult.builder().withFound(true).build();
+            if (elem == 1 || elem == 2 || elem == 3) return SearchResult.builder().withFound(true).build();
             return SearchResult.builder().withFound(false).build();
         }));
-        simFinder.calculateJackardSimilarity(fourElementSeqDuplicates,fourElementSeq);
-        assertEquals(fourElementSeqDuplicates.length,counter[0]);
+        simFinder.calculateJackardSimilarity(fourElementSeqDuplicates, fourElementSeq);
+        assertEquals(fourElementSeqDuplicates.length, counter[0]);
     }
 
     @Test
@@ -98,11 +110,11 @@ class SimilarityFinderTest {
         final int[] counter = {0};
         SimilarityFinder simFinder = new SimilarityFinder(((elem, sequence) -> {
             counter[0]++;
-            if (elem == 1 ||elem == 2 || elem == 3) return SearchResult.builder().withFound(true).build();
+            if (elem == 1 || elem == 2 || elem == 3) return SearchResult.builder().withFound(true).build();
             return SearchResult.builder().withFound(false).build();
         }));
-        simFinder.calculateJackardSimilarity(fourElementSeqDuplicates,fiveElementSeq);
-        assertEquals(fourElementSeqDuplicates.length,counter[0]);
+        simFinder.calculateJackardSimilarity(fourElementSeqDuplicates, fiveElementSeq);
+        assertEquals(fourElementSeqDuplicates.length, counter[0]);
     }
 
     @Test
@@ -112,8 +124,8 @@ class SimilarityFinderTest {
             counter[0]++;
             return SearchResult.builder().withFound(false).build();
         }));
-        simFinder.calculateJackardSimilarity(emptySeq,fiveElementSeq);
-        assertEquals(emptySeq.length,counter[0]);
+        simFinder.calculateJackardSimilarity(emptySeq, fiveElementSeq);
+        assertEquals(emptySeq.length, counter[0]);
     }
 
 
