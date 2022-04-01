@@ -208,4 +208,36 @@ class SimilarityFinderTest {
         assertEquals(arr1.length, counter[0]);
     }
 
+    @Test
+    void invokesWhenFirstSequenceEmpty(){
+        int[] arr1 = {};
+        int[] arr2 = {1, 5, 6};
+        final int[] counter = {0};
+
+        testFinder = new SimilarityFinder(((elem, sequence) -> SearchResult.builder().withFound(false).build()));
+        testFinder.calculateJackardSimilarity(arr1, arr2);
+        assertEquals(arr1.length, counter[0]);
+    }
+
+    @Test
+    void invokesWhenSecondSequenceEmpty(){
+        int[] arr1 = {1, 5, 6, 5};
+        int[] arr2 = {};
+        final int[] counter = {0};
+
+        testFinder = new SimilarityFinder(((elem, sequence) -> {
+            switch(elem){
+                case 1:
+                case 5:
+                case 6:
+                    counter[0]++;
+                    return SearchResult.builder().withFound(false).build();
+                default:
+                    return null;
+            }
+        }));
+        testFinder.calculateJackardSimilarity(arr1, arr2);
+        assertEquals(arr1.length, counter[0]);
+    }
+
 }
