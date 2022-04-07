@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class SimilarityFinderTest {
 
     @Test
-    void test0() {
+    void arrayIsTheSame() {
         SimilarityFinder similarityFinder = new SimilarityFinder(new SequenceSearcher() {
             @Override
             public SearchResult search(int elem, int[] sequence) {
@@ -22,7 +22,7 @@ class SimilarityFinderTest {
         assertEquals(1, similarityFinder.calculateJackardSimilarity(seq1, seq2));
     }
     @Test
-    void  test1() {
+    void  arrayIsDifferent() {
         SimilarityFinder similarityFinder = new SimilarityFinder(new SequenceSearcher() {
             @Override
             public SearchResult search(int elem, int[] sequence) {
@@ -37,7 +37,7 @@ class SimilarityFinderTest {
         assertEquals(0.5, similarityFinder.calculateJackardSimilarity(seq1, seq2));
     }
     @Test
-    void test2() {
+    void arrayIsDifferent2() {
         SimilarityFinder similarityFinder = new SimilarityFinder(new SequenceSearcher() {
             @Override
             public SearchResult search(int elem, int[] sequence) {
@@ -49,7 +49,7 @@ class SimilarityFinderTest {
         assertEquals(0, similarityFinder.calculateJackardSimilarity(seq1, seq2));
     }
     @Test
-    void test3() {
+    void arrayIsEmpty() {
         SimilarityFinder similarityFinder = new SimilarityFinder(new SequenceSearcher() {
             @Override
             public SearchResult search(int elem, int[] sequence) {
