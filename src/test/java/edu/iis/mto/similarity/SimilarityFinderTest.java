@@ -11,6 +11,7 @@ class SimilarityFinderTest {
     public static final int[] fiveElementSequance = {1, 2, 3, 4, 5};
     public static final int[] secondFiveElementSequance = {1, 2, 7, 8, 9};
     public static final int[] fourElementSeq = {8, 2, 4, 1};
+    public static final int[] fourDifferentSequance = {3, 5, 6, 7};
     
     // Testy stanu
     @Test
@@ -59,6 +60,13 @@ class SimilarityFinderTest {
         }));
         
         assertEquals(1, similarityFinder.calculateJackardSimilarity(fourElementSeq, fourElementSeq));
+    }
+
+    @Test
+    void differentSequanceExpectingZero() {
+        SimilarityFinder similarityFinder = new SimilarityFinder(((elem, sequance) -> SearchResult.builder().withFound(false).build()));
+        
+        assertEquals(0, similarityFinder.calculateJackardSimilarity(fourElementSeq, fourDifferentSequance));
     }
 
 
