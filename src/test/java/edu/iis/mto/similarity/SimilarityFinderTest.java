@@ -89,4 +89,15 @@ class SimilarityFinderTest {
         assertEquals(fourElementSeq.length, count[0]);
     }
 
+    @Test
+    void  emptySequanceExpectingInvokingZeroTimes() {
+        final int[] count = {0};
+        SimilarityFinder similarityFinder = new SimilarityFinder(((elem, sequance) -> {
+            count[0]++;
+            return SearchResult.builder().withFound(false).build();
+        }));
+
+        similarityFinder.calculateJackardSimilarity(emptySequance, emptySequance);
+        assertEquals(emptySequance.length, count[0]);
+    }
 }
