@@ -51,4 +51,14 @@ class SimilarityFinderTest {
         assertEquals(0.5, similarityFinder.calculateJackardSimilarity(fiveElementSequance, fourElementSeq));
     }
 
+    @Test
+    void sameSequanceExpectingOne() {
+        SimilarityFinder similarityFinder = new SimilarityFinder(((elem, sequance) -> {
+            if (elem == 1 || elem == 2 || elem == 4 || elem == 8) return SearchResult.builder().withFound(true).build();
+            return SearchResult.builder().withFound(false).build();
+        }));
+        
+        assertEquals(1, similarityFinder.calculateJackardSimilarity(fourElementSeq, fourElementSeq));
+    }
+
 }
