@@ -61,4 +61,32 @@ class SimilarityFinderTest {
         assertEquals(1, similarityFinder.calculateJackardSimilarity(fourElementSeq, fourElementSeq));
     }
 
+
+    // Testy zachowania
+    @Test
+    void  sameLengthSequanceExpectingInvokingFiveTimes() {
+        final int[] count = {0};
+        SimilarityFinder similarityFinder = new SimilarityFinder(((elem, sequance) -> {
+            count[0]++;
+            if (elem == 1 || elem == 2 || elem == 3 || elem == 4 || elem == 5) return SearchResult.builder().withFound(true).build();
+            return SearchResult.builder().withFound(false).build();
+        }));
+
+        similarityFinder.calculateJackardSimilarity(fiveElementSequance, secondFiveElementSequance);
+        assertEquals(fiveElementSequance.length, count[0]);
+    }
+
+    @Test
+    void  differentLengthSequanceExpectingInvokingFourTimes() {
+        final int[] count = {0};
+        SimilarityFinder similarityFinder = new SimilarityFinder(((elem, sequance) -> {
+            count[0]++;
+            if (elem == 1 || elem == 2 || elem == 4) return SearchResult.builder().withFound(true).build();
+            return SearchResult.builder().withFound(false).build();
+        }));
+
+        similarityFinder.calculateJackardSimilarity(fourElementSeq, fiveElementSequance);
+        assertEquals(fourElementSeq.length, count[0]);
+    }
+
 }
